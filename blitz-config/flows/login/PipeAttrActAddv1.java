@@ -19,7 +19,6 @@ import com.identityblitz.idp.login.authn.flow.More;
 import com.identityblitz.idp.login.authn.flow.LCookie;
 import com.identityblitz.idp.login.authn.flow.LUserAgent;
 import com.identityblitz.idp.login.authn.flow.LBrowser;
-import com.identityblitz.idp.federation.matching.JsObj;
 import com.identityblitz.idp.flow.common.api.*;
 import com.identityblitz.idp.flow.dynamic.*;
 import java.lang.invoke.LambdaMetafactory;
@@ -38,7 +37,7 @@ public class PipeAttrActAdd implements Strategy {
   	//private final static String MOBILE_ATTR = null;
     private final static String EMAIL_ATTR = "email";
   	private final static String COMMON_ATTR = "middle_name";
-	private final static Integer SKIP_TIME_IN_SEC = 120;
+	  private final static Integer SKIP_TIME_IN_SEC = 120;
   	private final static Integer ACT_TIME_IN_SEC = 1*1*1*1;
     private final static Boolean ASK_AT_1ST_LOGIN = false;
 
@@ -66,40 +65,40 @@ public class PipeAttrActAdd implements Strategy {
         if(reqFactor == null || reqFactor == ctx.justCompletedFactor()) {
               Enough.Builder en_builder = StrategyState.ENOUGH_BUILDER();
 				if (MOBILE_ATTR !=null && !new_device && requireActualizeAttr(MOBILE_ATTR, ctx)) {
-                  	  String uri = "https://"+DOMAIN+"/blitz/pipes/act/attr?attr="+MOBILE_ATTR+"&canSkip=true&appId=_blitz_profile&verified=true";
+                  	  String uri = "https://"+DOMAIN+"/blitz/pipes/attr/act?attr="+MOBILE_ATTR+"&canSkip=true&appId=_blitz_profile&verified=true";
 						Set<String> clms = new HashSet<String>(){{
-						  add("instanceId"); 
-						  add(MOBILE_ATTR); 
+						  add("instanceId");
+						  add(MOBILE_ATTR);
 						}};
 						Set<String> scps = new HashSet<String>(){{
-							add("openid");        
+							add("openid");
 						}};
-						logger.debug("User has no {} or a non-actualzed {}, so opening pipe", MOBILE_ATTR, MOBILE_ATTR);	
+						logger.debug("User has no {} or a non-actualzed {}, so opening pipe", MOBILE_ATTR, MOBILE_ATTR);
 						en_builder = en_builder.withPipe(uri, "_blitz_profile", scps, clms);
 				} else if (EMAIL_ATTR !=null && !new_device && requireActualizeAttr(EMAIL_ATTR, ctx)) {
-                  	  String uri = "https://"+DOMAIN+"/blitz/pipes/act/attr?attr="+EMAIL_ATTR+"&canSkip=true&appId=_blitz_profile&verified=true";
+                  	  String uri = "https://"+DOMAIN+"/blitz/pipes/attr/act?attr="+EMAIL_ATTR+"&canSkip=true&appId=_blitz_profile&verified=true";
 						Set<String> clms = new HashSet<String>(){{
-						  add("instanceId"); 
-						  add(EMAIL_ATTR); 
+						  add("instanceId");
+						  add(EMAIL_ATTR);
 						}};
 						Set<String> scps = new HashSet<String>(){{
-							add("openid");        
+							add("openid");
 						}};
-						logger.debug("User has no {} or a non-actualzed {}, so opening pipe", EMAIL_ATTR, EMAIL_ATTR);	
+						logger.debug("User has no {} or a non-actualzed {}, so opening pipe", EMAIL_ATTR, EMAIL_ATTR);
 						en_builder = en_builder.withPipe(uri, "_blitz_profile", scps, clms);
                 } else if (COMMON_ATTR !=null && !new_device && requireActualizeAttr(COMMON_ATTR, ctx)) {
-                  	  String uri = "https://"+DOMAIN+"/blitz/pipes/act/attr?attr="+COMMON_ATTR+"&canSkip=true&appId=_blitz_profile";
+                  	  String uri = "https://"+DOMAIN+"/blitz/pipes/attr/act?attr="+COMMON_ATTR+"&canSkip=true&appId=_blitz_profile";
 						Set<String> clms = new HashSet<String>(){{
-						  add("instanceId"); 
-						  add(COMMON_ATTR); 
+						  add("instanceId");
+						  add(COMMON_ATTR);
 						}};
 						Set<String> scps = new HashSet<String>(){{
-							add("openid");        
+							add("openid");
 						}};
-						logger.debug("User has no {}, so opening pipe", COMMON_ATTR);	
+						logger.debug("User has no {}, so opening pipe", COMMON_ATTR);
 						en_builder = en_builder.withPipe(uri, "_blitz_profile", scps, clms);
-				}          
-			return en_builder.build();            
+				}
+			return en_builder.build();
         } else {
             return StrategyState.MORE(new String[]{});
         }
@@ -135,5 +134,22 @@ public class PipeAttrActAdd implements Strategy {
             return ((now - actTime) > ACT_TIME_IN_SEC);
           }
         }
-    }  
+    }
+
+    /* Template for multi-attribute pipe */
+    private StrategyState enterFio(final Context ctx) {
+      String uri = "https://loop.dev.identityblitz.com/blitz/pipes/attrs/act?id=enter_fio&appId=my_id_1";
+      Set<String> claims = new HashSet<String>(){{
+        add("instanceId");
+        add("firstName");
+        add("lastName");
+        add("middleName"); 
+      }};
+      Set<String> scopes = new HashSet<String>(){{
+        add("openid");
+      }};
+      return StrategyState.ENOUGH_BUILDER()
+         .withPipe(uri, "my_id_1", scopes, claims)
+         .build(); 
+    }
 }

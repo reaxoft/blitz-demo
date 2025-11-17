@@ -19,7 +19,6 @@ import com.identityblitz.idp.login.authn.flow.StrategyBeginState;
 import com.identityblitz.idp.login.authn.flow.LCookie;
 import com.identityblitz.idp.login.authn.flow.LUserAgent;
 import com.identityblitz.idp.login.authn.flow.LBrowser;
-import com.identityblitz.idp.federation.matching.JsObj;
 import com.identityblitz.idp.flow.common.api.*;
 import com.identityblitz.idp.flow.dynamic.*;
 import java.util.function.Predicate;
@@ -28,6 +27,8 @@ import java.util.stream.Collectors;
 import java.lang.invoke.LambdaMetafactory;
 import java.util.function.Consumer;
 import static com.identityblitz.idp.login.authn.flow.StrategyState.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class AccountExpiresCheck implements Strategy {
 
@@ -47,7 +48,7 @@ public class AccountExpiresCheck implements Strategy {
 }
 
 @Override public StrategyState next(final Context ctx) {
-  if (ctx.claims("accountExpires") != null && isExpired(ctx.claims("accountExpires")))
+  if (ctx.claims("expires_at") != null && isExpired(ctx.claims("expires_at")))
     return StrategyState.DENY("account_expired", true);
   Integer reqFactor = (ctx.user() == null) ? null : ctx.user().requiredFactor();
   if(reqFactor == null || reqFactor == ctx.justCompletedFactor())
@@ -56,13 +57,13 @@ public class AccountExpiresCheck implements Strategy {
     return StrategyState.MORE(new String[]{});
 }
   
-public static boolean isExpired(String strData) {
-  try {
-    Date now = new Date();
-            Date date = new SimpleDateFormat("yyyy-M-d HH:mm").parse(strData);
-            return now.after(date);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+  public static boolean isExpired(String strDate) {
+    try {
+      LocalDate now = LocalDate.now();
+      LocalDate date = LocalDate.parse(strDate, DateTimeFormatter.BASIC_ISO_DATE);
+      return now.isAfter(date);
+    } catch (Exception e) {
+       throw new RuntimeException(e);
     }
+  }
 }

@@ -19,7 +19,6 @@ import com.identityblitz.idp.login.authn.flow.StrategyBeginState;
 import com.identityblitz.idp.login.authn.flow.LCookie;
 import com.identityblitz.idp.login.authn.flow.LUserAgent;
 import com.identityblitz.idp.login.authn.flow.LBrowser;
-import com.identityblitz.idp.federation.matching.JsObj;
 import com.identityblitz.idp.flow.common.api.*;
 import com.identityblitz.idp.flow.dynamic.*;
 import java.util.function.Predicate;
@@ -54,15 +53,15 @@ public class AddGroupsToToken implements Strategy {
             while (groupListIdx > -1) {
               String group = ctx.claims("memberOf.[" + groupListIdx + "]");
               logger.debug("### group [" + groupListIdx + "] = " + group);
-              if (group == null) { 
-                groupListIdx = -1; 
+              if (group == null) {
+                groupListIdx = -1;
               } else {
                 grps.add(ctx.claims("memberOf.[" + groupListIdx + "]"));
-                groupListIdx ++; 
+                groupListIdx ++;
               }
             }
 	  		LClaimsBuilder  claimsBuilder = ctx.claimsBuilder();
-          	if (grps.size() > 0) { 
+          	if (grps.size() > 0) {
             	claimsBuilder.addClaim("grps", grps);
             }
             LClaims claims = claimsBuilder.build();

@@ -19,7 +19,6 @@ import com.identityblitz.idp.login.authn.flow.StrategyBeginState;
 import com.identityblitz.idp.login.authn.flow.LCookie;
 import com.identityblitz.idp.login.authn.flow.LUserAgent;
 import com.identityblitz.idp.login.authn.flow.LBrowser;
-import com.identityblitz.idp.federation.matching.JsObj;
 import com.identityblitz.idp.flow.common.api.*;
 import com.identityblitz.idp.flow.dynamic.*;
 import java.util.function.Predicate;

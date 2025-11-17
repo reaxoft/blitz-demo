@@ -1,0 +1,24 @@
+##########################################################################################
+# version: 1
+# modified: 2025-11-17 12:30:56 MSK
+# comment: update json to encrypt secret params
+##########################################################################################
+{
+  "secretKey" : {
+    "__enc_alg" : "default",
+    "value" : "{$}tgZyzOIiqdy2Pw4yOqi2ziR2lc1bOnU1H+1nGbUdTo81LTLyi6CoVg=="
+  },
+  "typ" : "yandexSmartCaptcha",
+  "jsConf" : {
+    "test" : false,
+    "hl" : "ru",
+    "shieldPosition" : "bottom-right",
+    "invisible" : true,
+    "hideShield" : false,
+    "webview" : false,
+    "sitekey" : "<SITE_KEY>"
+  },
+  "check" : {
+    "validateDomain" : false
+  }
+}

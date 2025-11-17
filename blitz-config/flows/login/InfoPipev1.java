@@ -28,10 +28,10 @@ import java.lang.invoke.LambdaMetafactory;
 import java.util.function.Consumer;
 import static com.identityblitz.idp.login.authn.flow.StrategyState.*;
 
-public class AllowedIPs implements Strategy {
+public class InfoPipe implements Strategy {
 
     private final Logger logger = LoggerFactory.getLogger("com.identityblitz.idp.flow.dynamic");
-    private final static String[] ALLOW_IP = {"179.218","180.219"};
+	private final static String DOMAIN = "example.com";
 
     @Override public StrategyBeginState begin(final Context ctx) {
         if ("login".equals(ctx.prompt())){
@@ -46,32 +46,30 @@ public class AllowedIPs implements Strategy {
         }
     }
 
-    @Override public StrategyState next(final Context ctx) {
-      	if (!_allowed_ip(ctx.ip())) {
-			return StrategyState.DENY("ip_not_allowed", true);
-        }
-        Integer reqFactor = (ctx.user() == null) ? null : ctx.user().requiredFactor();
-        if(reqFactor == null || reqFactor == ctx.justCompletedFactor()) {
-            return StrategyState.ENOUGH_BUILDER()
-                .build();
-        } else
-            return StrategyState.MORE(new String[]{});
+    @Override public StrategyState next(Context ctx) {
+        if (ctx.user() == null || ctx.user().requiredFactor() == null ||
+            ctx.user().requiredFactor().equals(ctx.justCompletedFactor()))
+            if (requiredNews("user_agreement", ctx)) return showNews("user_agreement", ctx);
+            else return StrategyState.ENOUGH();
+        else
+            return StrategyState.MORE(new String[] {});
     }
 
-  	private Boolean _allowed_ip(final String IP) {
-	  int IpListIdx = 0;
-	  boolean ipAllowed = false;
-	  while (IpListIdx > -1) {
-		String ip_part = ALLOW_IP[IpListIdx];
-		if (IP.startsWith(ip_part)) {
-          	ipAllowed = true;
-          	IpListIdx = -1;
-      	} else if (ALLOW_IP.length == (IpListIdx + 1)) {
-			IpListIdx = -1;
-		} else {
-			IpListIdx ++;
-		}
-	  }
-		return ipAllowed;
-	}
+    private boolean requiredNews(final String pipeId, final Context ctx) {
+        Long readOn = ctx.user().userProps().numProp("pipes.info." + pipeId + ".disagreedOn");
+        return (readOn == null || Instant.now().getEpochSecond() - readOn > 30*86400);
+    }
+
+    private StrategyState showNews(final String pipeId, final Context ctx) {
+        String uri = "https://" + DOMAIN + "/blitz/pipes/info/start?&pipeId=" + pipeId + "&appId=_blitz_profile";
+        Set<String> claims = new HashSet<String>(){{
+            add("instanceId");
+        }};
+        Set<String> scopes = new HashSet<String>(){{
+            add("openid");
+       }};
+       return StrategyState.ENOUGH_BUILDER()
+         .withPipe(uri, "_blitz_profile", scopes, claims)
+         .build();
+    }
 }
