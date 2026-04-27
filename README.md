@@ -8,7 +8,12 @@
 2. Склонировать данный репозиторий командой:  
 `git clone https://github.com/reaxoft/blitz-demo.git`
 3. Перейти в директорию с файлами из репозитория
-4. Запустить Blitz Identity Provider командой:  
+4. В случае работы на ОС Linux дополнительно необходимо выставить права на файлы командами:
+```
+chmod -R 777 blitz-config
+chmod -R 777 logs
+```
+5. Запустить Blitz Identity Provider командой:  
 `docker-compose up -d`
 
 Для остановки Blitz Identity Provider выполните команду:  
