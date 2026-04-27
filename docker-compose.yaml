@@ -1,7 +1,6 @@
 services:
   memcached:
     image: memcached:latest
-    container_name: memcached
     environment:
       - TZ=Europe/Moscow
     restart: unless-stopped
@@ -10,7 +9,6 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: nginx
     ports:
       - 80:80
       - 443:443
@@ -31,7 +29,6 @@ services:
 
   postgres:
     image: postgres:13.1-alpine
-    container_name: postgres
     restart: unless-stopped
     volumes:
       - pg-data:/var/lib/postgresql/data
@@ -71,13 +68,18 @@ services:
       - POSTGRES_PASSWORD=blitz_db_pass
       - POSTGRES_USER=blitz
       - POSTGRES_DB=blitzdb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blitz -d blitzdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     networks:
       - blitz-net
 
   blitz-console:
     restart: unless-stopped
     image: reaxoft/blitz-console:5.31.4
-    container_name: blitz-console
     environment:
       - TZ=Europe/Moscow
     volumes:
@@ -86,15 +88,22 @@ services:
     tmpfs:
       - /tmp
     depends_on:
-      - memcached
-      - postgres
+      postgres:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:9001/blitz/metrics || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     networks:
       - blitz-net
 
   blitz-idp:
     restart: unless-stopped
     image: reaxoft/blitz-idp:5.31.4
-    container_name: blitz-idp
     environment:
       - TZ=Europe/Moscow
     volumes:
@@ -103,15 +112,22 @@ services:
     tmpfs:
       - /tmp
     depends_on:
-      - memcached
-      - postgres
+      postgres:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:9000/blitz/metrics || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     networks:
       - blitz-net
 
   blitz-reg:
     restart: unless-stopped
     image: reaxoft/blitz-registration:5.31.4
-    container_name: blitz-reg
     environment:
       - TZ=Europe/Moscow
     volumes:
@@ -120,15 +136,22 @@ services:
     tmpfs:
       - /tmp
     depends_on:
-      - memcached
-      - postgres
+      postgres:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:9002/blitz/metrics || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     networks:
       - blitz-net
 
   blitz-rec:
     restart: unless-stopped
     image: reaxoft/blitz-recovery:5.31.4
-    container_name: blitz-rec
     environment:
       - TZ=Europe/Moscow
     volumes:
@@ -137,15 +160,22 @@ services:
     tmpfs:
       - /tmp
     depends_on:
-      - memcached
-      - postgres
+      postgres:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:9003/blitz/metrics || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     networks:
       - blitz-net
 
   blitz-keeper:
     restart: unless-stopped
     image: reaxoft/blitz-keeper:5.11.3
-    container_name: blitz-keeper
     ports:
       - 9012:9012
     environment:
@@ -155,7 +185,8 @@ services:
       - ./logs:/var/log/identityblitz
       - ./blitz-keeper/blitz-keeper:/etc/default/blitz-keeper
     depends_on:
-      - blitz-idp
+      blitz-idp:
+        condition: service_healthy
     networks:
       - blitz-net
 
