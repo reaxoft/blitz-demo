@@ -2,7 +2,7 @@ services:
   memcached:
     image: memcached:latest
     environment:
-      - TZ=Europe/Moscow
+      TZ: Europe/Moscow
     restart: unless-stopped
     networks:
       - blitz-net
@@ -19,7 +19,7 @@ services:
       - ./nginx/test-services:/usr/share/nginx/html/test-services
       - ./logs:/var/log/nginx
     environment:
-      - TZ=Europe/Moscow
+      TZ: Europe/Moscow
     restart: unless-stopped
     networks:
       blitz-net:
@@ -62,12 +62,14 @@ services:
       - ./postgresql/027-5.30.0.sql:/docker-entrypoint-initdb.d/027-5.30.0.sql
       - ./postgresql/028-5.31.0.sql:/docker-entrypoint-initdb.d/028-5.31.0.sql
       - ./postgresql/029-5.31.3.sql:/docker-entrypoint-initdb.d/029-5.31.3.sql
+      - ./postgresql/030-5.33.0.sql:/docker-entrypoint-initdb.d/030-5.33.0.sql
+      - ./postgresql/031-5.34.0.sql:/docker-entrypoint-initdb.d/031-5.34.0.sql
       - ./postgresql/099-test_data.sql:/docker-entrypoint-initdb.d/099-test_data.sql
     environment:
-      - TZ=Europe/Moscow
-      - POSTGRES_PASSWORD=blitz_db_pass
-      - POSTGRES_USER=blitz
-      - POSTGRES_DB=blitzdb
+      TZ: Europe/Moscow
+      POSTGRES_PASSWORD: blitz_db_pass
+      POSTGRES_USER: blitz
+      POSTGRES_DB: blitzdb
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U blitz -d blitzdb"]
       interval: 10s
@@ -79,9 +81,10 @@ services:
 
   blitz-console:
     restart: unless-stopped
-    image: reaxoft/blitz-console:5.31.4
+    image: reaxoft/blitz-console:5.34.5
     environment:
-      - TZ=Europe/Moscow
+      TZ: Europe/Moscow
+      JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
     volumes:
       - ./blitz-config:/usr/share/identityblitz/blitz-config
       - ./logs:/usr/share/identityblitz/logs
@@ -103,9 +106,10 @@ services:
 
   blitz-idp:
     restart: unless-stopped
-    image: reaxoft/blitz-idp:5.31.4
+    image: reaxoft/blitz-idp:5.34.5
     environment:
-      - TZ=Europe/Moscow
+      TZ: Europe/Moscow
+      JAVA_OPTS: "-server -Xms1G -Xmx1G -XX:MaxMetaspaceSize=512m -Xmn256m -Dpidfile.path=/tmp/RUNNING_PID -DblitzDispatchedQueues=blitz-tasks,postpone"
     volumes:
       - ./blitz-config:/usr/share/identityblitz/blitz-config
       - ./logs:/usr/share/identityblitz/logs
@@ -127,9 +131,10 @@ services:
 
   blitz-reg:
     restart: unless-stopped
-    image: reaxoft/blitz-registration:5.31.4
+    image: reaxoft/blitz-registration:5.34.5
     environment:
-      - TZ=Europe/Moscow
+      TZ: Europe/Moscow
+      JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
     volumes:
       - ./blitz-config:/usr/share/identityblitz/blitz-config
       - ./logs:/usr/share/identityblitz/logs
@@ -151,9 +156,10 @@ services:
 
   blitz-rec:
     restart: unless-stopped
-    image: reaxoft/blitz-recovery:5.31.4
+    image: reaxoft/blitz-recovery:5.34.5
     environment:
-      - TZ=Europe/Moscow
+      TZ: Europe/Moscow
+      JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
     volumes:
       - ./blitz-config:/usr/share/identityblitz/blitz-config
       - ./logs:/usr/share/identityblitz/logs
@@ -175,15 +181,16 @@ services:
 
   blitz-keeper:
     restart: unless-stopped
-    image: reaxoft/blitz-keeper:5.11.3
+    image: reaxoft/blitz-keeper:5.34.5
     ports:
       - 9012:9012
     environment:
-      - TZ=Europe/Moscow
+      TZ: Europe/Moscow
+      JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dlogback.configurationFile=/etc/blitz-keeper/blitz-keeper-logback.xml"
+      conf_file: "/etc/blitz-keeper/boot.conf"
     volumes:
       - ./blitz-keeper:/etc/blitz-keeper
       - ./logs:/var/log/identityblitz
-      - ./blitz-keeper/blitz-keeper:/etc/default/blitz-keeper
     depends_on:
       blitz-idp:
         condition: service_healthy

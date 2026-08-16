@@ -5,26 +5,39 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${dir.logs}/${app.name}.log</file>
         <encoder>
-            <pattern>%date - [%level] -[%file:%line] - %message%n%xException{20}</pattern>
+            <pattern>%date - [%level] - [%logger] -[%file:%line] - %message%n%xException{20}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${dir.logs}/${app.name}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${dir.logs}/archive/${app.name}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <maxFileSize>2GB</maxFileSize>
-            <maxHistory>90</maxHistory>
-            <totalSizeCap>20GB</totalSizeCap>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
     <appender name="EVENTS" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${dir.logs}/${app.name}-events.log</file>
         <encoder>
+            <pattern>%date - [%level] - [%logger] -[%file:%line] - %message%n%xException{20}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${dir.logs}/archive/${app.name}-events.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>2GB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${dir.logs}/${app.name}-audit.log</file>
+        <encoder>
             <pattern>%date - [%level] -[%file:%line] - %message%n%xException{20}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${dir.logs}/${app.name}-events.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${dir.logs}/archive/${app.name}-audit.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <maxFileSize>2GB</maxFileSize>
-            <maxHistory>90</maxHistory>
-            <totalSizeCap>20GB</totalSizeCap>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
@@ -43,6 +56,10 @@
         <suffixPattern>[${app.name}] - [%level] -[%file:%line] - %message%n%xException{20}</suffixPattern>
     </appender>
     -->
+
+    <logger name="com.identityblitz.idp.audit" additivity="false">
+        <appender-ref ref="AUDIT" />
+    </logger>
 
     <logger name="com.identityblitz.idp.events" additivity="false">
         <appender-ref ref="EVENTS" />

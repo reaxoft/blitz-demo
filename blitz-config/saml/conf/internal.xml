@@ -65,7 +65,7 @@
                     <key>
                         <value>http://apache.org/xml/properties/security-manager</value>
                     </key>
-                    <bean id="shibboleth.XercesSecurityManager" class="org.apache.xerces.util.SecurityManager"/>
+                    <bean id="shibboleth.XercesSecurityManager" class="com.sun.org.apache.xerces.internal.util.SecurityManager"/>
                 </entry>
             </map>
         </property>
@@ -213,7 +213,7 @@
             <key>
                 <value>urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST</value>
             </key>
-            <bean id="shibboleth.SAML2HttpPostEncoder" class="org.opensaml.saml2.binding.encoding.HTTPPostEncoder">
+            <bean id="shibboleth.SAML2HttpPostEncoder" class="com.identityblitz.saml2.binding.encoding.HTTPPostEncoder">
                 <constructor-arg ref="shibboleth.VelocityEngine"/>
                 <constructor-arg value="/templates/saml2-post-binding.vm"/>
             </bean>

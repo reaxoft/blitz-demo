@@ -1,0 +1,43 @@
+<configuration scan="false">
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-6r %d{ISO8601} %-5p [%t] %c{2} \(%F:%L\).%M\(\) - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/log/identityblitz/blitz-keeper.log</file>
+        <encoder>
+            <pattern>%date - [%level] - [%logger] - [%file:%line] - %message%n%xException{20}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/identityblitz/archive/blitz-keeper.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>2GB</maxFileSize>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/log/identityblitz/blitz-keeper-audit.log</file>
+        <encoder>
+            <pattern>%m%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/identityblitz/archive/blitz-keeper-audit.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>2GB</maxFileSize>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="AUDIT" additivity="false">
+        <appender-ref ref="AUDIT" />
+    </logger>
+
+    <root>
+        <appender-ref ref="FILE"/>
+        <!-- <appender-ref ref="stdout" /> -->
+    </root>
+</configuration>

@@ -13,7 +13,9 @@
         "clientRights": [],
         "userRights": [],
         "scopes": ["testsys2"],
+        "userAttrs": {},
         "userClaims": {},
-        "userGroups": []
+        "userGroups": [],
+        "clientIds": []
     }
 }

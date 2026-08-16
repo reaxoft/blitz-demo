@@ -1,4 +1,0 @@
-export JAVA_HOME=/usr/local/openjdk-8
-export PIDFILE=/usr/share/identityblitz/blitz-keeper/RUNNING_PID
-export master_key=eb5C97fC864aE03d1eDa4f35aA8c3b8d
-export conf_file=/etc/blitz-keeper/blitz-keeper.conf
