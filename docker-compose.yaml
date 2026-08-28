@@ -81,7 +81,7 @@ services:
 
   blitz-console:
     restart: unless-stopped
-    image: reaxoft/blitz-console:5.34.5
+    image: reaxoft/blitz-console:5.34.6
     environment:
       TZ: Europe/Moscow
       JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
@@ -106,7 +106,7 @@ services:
 
   blitz-idp:
     restart: unless-stopped
-    image: reaxoft/blitz-idp:5.34.5
+    image: reaxoft/blitz-idp:5.34.6
     environment:
       TZ: Europe/Moscow
       JAVA_OPTS: "-server -Xms1G -Xmx1G -XX:MaxMetaspaceSize=512m -Xmn256m -Dpidfile.path=/tmp/RUNNING_PID -DblitzDispatchedQueues=blitz-tasks,postpone"
@@ -131,7 +131,7 @@ services:
 
   blitz-reg:
     restart: unless-stopped
-    image: reaxoft/blitz-registration:5.34.5
+    image: reaxoft/blitz-registration:5.34.6
     environment:
       TZ: Europe/Moscow
       JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
@@ -156,7 +156,7 @@ services:
 
   blitz-rec:
     restart: unless-stopped
-    image: reaxoft/blitz-recovery:5.34.5
+    image: reaxoft/blitz-recovery:5.34.6
     environment:
       TZ: Europe/Moscow
       JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
