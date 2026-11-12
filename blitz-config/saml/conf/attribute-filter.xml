@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ns7:AttributeFilterPolicyGroup id="ShibbolethFilterPolicy" xsi:schemaLocation="urn:mace:shibboleth:2.0:afp classpath:/schema/shibboleth-2.0-afp.xsd urn:mace:shibboleth:2.0:afp:mf:basic classpath:/schema/shibboleth-2.0-afp-mf-basic.xsd urn:mace:shibboleth:2.0:afp:mf:saml classpath:/schema/shibboleth-2.0-afp-mf-saml.xsd" xmlns:ns2="urn:mace:shibboleth:2.0:resolver" xmlns:ns4="urn:mace:shibboleth:2.0:security" xmlns:ns3="urn:mace:shibboleth:2.0:resolver:dc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns6="http://www.w3.org/2000/09/xmldsig#" xmlns:ns5="urn:mace:shibboleth:2.0:resource" xmlns:ns8="urn:mace:shibboleth:2.0:afp:mf:basic" xmlns:ns7="urn:mace:shibboleth:2.0:afp" xmlns:ns13="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ns9="urn:mace:shibboleth:2.0:services" xmlns:ns12="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ns11="urn:mace:shibboleth:2.0:idp:profile-handler" xmlns:ns10="http://www.w3.org/2001/04/xmlenc#" xmlns:ns17="urn:mace:shibboleth:2.0:resolver:ad" xmlns:ns16="urn:mace:shibboleth:2.0:relying-party:saml" xmlns:ns15="urn:mace:shibboleth:2.0:metadata" xmlns:ns14="urn:mace:shibboleth:2.0:relying-party" xmlns:ns19="urn:mace:shibboleth:metadata:1.0" xmlns:ns18="urn:mace:shibboleth:2.0:attribute-map">
-    <ns7:AttributeFilterPolicy id="releaseTransientIdToAnyone">
-        <ns7:PolicyRequirementRule xsi:type="ns8:ANY"/>
-        <ns7:AttributeRule attributeID="transientId">
-            <ns7:PermitValueRule xsi:type="ns8:ANY"/>
-        </ns7:AttributeRule>
-    </ns7:AttributeFilterPolicy>
-</ns7:AttributeFilterPolicyGroup>

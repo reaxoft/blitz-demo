@@ -13,7 +13,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./blitz-config:/etc/blitz-config
+      - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/static_errors:/usr/share/nginx/html/static_errors
       - ./nginx/test-services:/usr/share/nginx/html/test-services
@@ -64,6 +64,7 @@ services:
       - ./postgresql/029-5.31.3.sql:/docker-entrypoint-initdb.d/029-5.31.3.sql
       - ./postgresql/030-5.33.0.sql:/docker-entrypoint-initdb.d/030-5.33.0.sql
       - ./postgresql/031-5.34.0.sql:/docker-entrypoint-initdb.d/031-5.34.0.sql
+      - ./postgresql/032-5.35.0.sql:/docker-entrypoint-initdb.d/032-5.35.0.sql
       - ./postgresql/099-test_data.sql:/docker-entrypoint-initdb.d/099-test_data.sql
     environment:
       TZ: Europe/Moscow
@@ -81,7 +82,7 @@ services:
 
   blitz-console:
     restart: unless-stopped
-    image: reaxoft/blitz-console:5.34.6
+    image: reaxoft/blitz-console:5.35.5
     environment:
       TZ: Europe/Moscow
       JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
@@ -106,7 +107,7 @@ services:
 
   blitz-idp:
     restart: unless-stopped
-    image: reaxoft/blitz-idp:5.34.6
+    image: reaxoft/blitz-idp:5.35.5
     environment:
       TZ: Europe/Moscow
       JAVA_OPTS: "-server -Xms1G -Xmx1G -XX:MaxMetaspaceSize=512m -Xmn256m -Dpidfile.path=/tmp/RUNNING_PID -DblitzDispatchedQueues=blitz-tasks,postpone"
@@ -131,7 +132,7 @@ services:
 
   blitz-reg:
     restart: unless-stopped
-    image: reaxoft/blitz-registration:5.34.6
+    image: reaxoft/blitz-registration:5.35.5
     environment:
       TZ: Europe/Moscow
       JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
@@ -156,7 +157,7 @@ services:
 
   blitz-rec:
     restart: unless-stopped
-    image: reaxoft/blitz-recovery:5.34.6
+    image: reaxoft/blitz-recovery:5.35.5
     environment:
       TZ: Europe/Moscow
       JAVA_OPTS: "-server -Xms512m -Xmx512m -XX:MaxMetaspaceSize=256m -Xmn128m -Dpidfile.path=/tmp/RUNNING_PID"
